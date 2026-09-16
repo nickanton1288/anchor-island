@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anchor Island — Email confirmed</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --sea: #1e4a6a;
+      --deep: #0f2838;
+      --sand: #c8b078;
+      --foam: #e8f4f8;
+      --ink: #0a0c0e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(ellipse at 50% 0%, var(--sea) 0%, var(--deep) 55%, var(--ink) 100%);
+      color: var(--foam);
+      padding: 24px;
+    }
+    .card {
+      max-width: 420px;
+      width: 100%;
+      background: rgba(8, 20, 32, 0.92);
+      border: 2px solid rgba(200, 176, 120, 0.35);
+      border-radius: 8px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: normal;
+      letter-spacing: 0.04em;
+      margin: 0 0 8px;
+      color: var(--sand);
+    }
+    p {
+      margin: 0 0 14px;
+      line-height: 1.55;
+      font-size: 0.98rem;
+      opacity: 0.92;
+    }
+    .status {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: rgba(30, 74, 106, 0.45);
+      border: 1px solid rgba(232, 244, 248, 0.12);
+    }
+    .status.error {
+      background: rgba(80, 24, 24, 0.5);
+      border-color: rgba(255, 180, 180, 0.2);
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      opacity: 0.55;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Anchor Island</h1>
+    <p id="lead">Thanks for confirming your email.</p>
+    <div class="status" id="status">You can close this page and sign in from the game.</div>
+    <footer>Cloud saves are tied to this email address.</footer>
+  </main>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var hash = window.location.hash.replace(/^#/, "");
+      if (hash) {
+        hash.split("&").forEach(function (part) {
+          var kv = part.split("=");
+          if (kv.length === 2) params.set(decodeURIComponent(kv[0]), decodeURIComponent(kv[1]));
+        });
+      }
+      var err = params.get("error_description") || params.get("error");
+      var status = document.getElementById("status");
+      var lead = document.getElementById("lead");
+      if (err) {
+        lead.textContent = "We could not finish confirming your email.";
+        status.textContent = err.replace(/\+/g, " ");
+        status.classList.add("error");
+        return;
+      }
+      var type = params.get("type");
+      if (type === "recovery") {
+        lead.textContent = "Password reset link verified.";
+        status.textContent = "Use the game’s Forgot password flow if you still need to set a new password.";
+      }
+    })();
+  </script>
+</body>
+</html>
